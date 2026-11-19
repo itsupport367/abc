@@ -1,114 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MKC Visitor Entry Form</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MKC Visitor Entry Form</title>
 
-<style>
-body{
-	display:flex;
-	height:100vh;
-	justify-content:center;
-	align-items:center;
-	//background:url('adming.gif')no-repeat;
-	background:url('mkc.gif')no-repeat;
-	background-size:cover;
-	background-size: 100% 100%;
-	backdrop-filter: blur(5px);
-	opacity: 0.9;
-}
-*{
-	padding:0;
-	margin:0;
-	box-sizing:border-box;
-	font-family:sans-serif;
-}
-.container {
-  max-width: 450px;
-  margin: auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px #ccc;
-}
-h2 { text-align: center; color: #173b68; }
-input, select, textarea, button {
-  width: 100%;
-  padding: 12px;
-  margin: 9px 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-button {
-  background: #1769aa;
-  color: white;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-}
-</style>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      /* Fallback gradient if mkc.gif is missing or slow to load */
+      background-color: #173b68;
+      background-image: url('mkc.gif');
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      position: relative;
+    }
+
+    /* Clean background blur overlay without fading out the form itself */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.25);
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 450px;
+      background: rgba(255, 255, 255, 0.96);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    h2 {
+      text-align: center;
+      color: #173b68;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-top: 8px;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 11px;
+      margin: 6px 0 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 75px;
+    }
+
+    button {
+      background: #1769aa;
+      color: white;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #125285;
+    }
+
+    #message {
+      margin-top: 12px;
+      text-align: center;
+      font-weight: bold;
+      color: #1b5e20;
+    }
+  </style>
 </head>
 
 <body>
-<div class="container">
+  <div class="container">
+    <h2>Visitor Entry Form</h2>
 
-<h2>Visitor Entry Form</h2>
+    <form id="visitorForm">
+      <label for="name">Visitor Name</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
 
-<form id="visitorForm">
+      <label for="mobile">Mobile Number</label>
+      <input type="tel" id="mobile" name="mobile" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
 
-<label>Visitor Name</label>
-<input type="text" name="name"
-placeholder="Enter your name" required>
+      <label for="company">Company Name</label>
+      <input type="text" id="company" name="company" placeholder="Enter company name" required>
 
-<label>Mobile Number</label>
-<input type="tel" name="mobile"
-placeholder="Enter mobile number"
-pattern="[0-9]{10}" required>
+      <label for="person">Person to Meet</label>
+      <input type="text" id="person" name="person" placeholder="Whom do you want to meet?" required>
 
-<label>Company Name</label>
-<input type="text" name="company"
-placeholder="Enter company name" required>
+      <label for="purpose">Visit Purpose</label>
+      <select id="purpose" name="purpose" required>
+        <option value="">Select purpose</option>
+        <option value="Meeting">Meeting</option>
+        <option value="Official Work">Official Work</option>
+        <option value="Delivery">Delivery</option>
+        <option value="Interview">Interview</option>
+        <option value="Other">Other</option>
+      </select>
 
-<label>Person to Meet</label>
-<input type="text" name="person"
-placeholder="Whom do you want to meet?" required>
+      <label for="selfie">Visitor Selfie</label>
+      <input type="file" id="selfie" name="selfie" accept="image/*" capture="user" required>
 
-<label>Visit Purpose</label>
-<select name="purpose" required>
-<option value="">Select purpose</option>
-<option>Meeting</option>
-<option>Official Work</option>
-<option>Delivery</option>
-<option>Interview</option>
-<option>Other</option>
-</select>
+      <label for="details">Additional Details</label>
+      <textarea id="details" name="details" placeholder="Enter details"></textarea>
 
-<label>Visitor Selfie</label>
-<input type="file" name="selfie"
-accept="image/*" capture="user" required>
+      <button type="submit">Submit Visitor Details</button>
+    </form>
 
-<label>Additional Details</label>
-<textarea name="details"
-placeholder="Enter details"></textarea>
+    <p id="message"></p>
+  </div>
 
-<button type="submit">Submit Visitor Details</button>
-
-</form>
-
-<p id="message"></p>
-
-</div>
-
-<script>
-document.getElementById("visitorForm")
-.addEventListener("submit", function(e) {
-  e.preventDefault();
-  document.getElementById("message").textContent =
-    "Form completed. Connect a database to save visitor details.";
-});
-</script>
-
+  <script>
+    document.getElementById("visitorForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      document.getElementById("message").textContent =
+        "Form completed! (Note: Connect Google Sheets or a backend to save data permanently.)";
+    });
+  </script>
 </body>
 </html>
