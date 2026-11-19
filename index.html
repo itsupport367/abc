@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MKC Visitor Entry Form</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visitor Entry Form</title>
   <style>
     * {
-      padding: 0;
-      margin: 0;
       box-sizing: border-box;
-      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     body {
@@ -18,59 +17,57 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      /* Fallback gradient if mkc.gif is missing or slow to load */
-      background-color: #173b68;
-      background-image: url('mkc.gif');
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
-      position: relative;
+      padding: 24px;
+      background: linear-gradient(135deg, #0099e5 0%, #3b267d 100%);
     }
 
-    /* Clean background blur overlay without fading out the form itself */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      background: rgba(0, 0, 0, 0.25);
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
+    .form-card {
       width: 100%;
-      max-width: 450px;
-      background: rgba(255, 255, 255, 0.96);
-      padding: 25px;
+      max-width: 440px;
+      background: rgba(255, 255, 255, 0.94);
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+      padding: 28px 26px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
     }
 
     h2 {
       text-align: center;
-      color: #173b68;
-      margin-bottom: 16px;
+      color: #2c436b;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
     }
 
     label {
       display: block;
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-      margin-top: 8px;
+      font-size: 15px;
+      color: #222;
+      margin-bottom: 6px;
+      font-weight: 500;
     }
 
-    input, select, textarea, button {
+    input[type="text"],
+    input[type="tel"],
+    select,
+    textarea {
       width: 100%;
-      padding: 11px;
-      margin: 6px 0 10px 0;
-      border: 1px solid #ccc;
+      padding: 11px 12px;
+      border: 1px solid #c9ced6;
       border-radius: 6px;
       font-size: 14px;
+      color: #333;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #2b6cb0;
     }
 
     textarea {
@@ -78,75 +75,295 @@
       min-height: 75px;
     }
 
-    button {
-      background: #1769aa;
-      color: white;
-      border: none;
-      font-size: 16px;
-      font-weight: bold;
+    /* Selfie Capture Box */
+    .selfie-box {
+      border: 1px solid #c9ced6;
+      border-radius: 6px;
+      padding: 12px;
+      background: #f9fafb;
+    }
+
+    .camera-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .btn-secondary {
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid #2b6cb0;
+      background: #fff;
+      color: #2b6cb0;
+      border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px;
-      transition: background 0.2s ease;
+      font-weight: 600;
+      transition: all 0.2s;
     }
 
-    button:hover {
-      background: #125285;
+    .btn-secondary:hover {
+      background: #2b6cb0;
+      color: #fff;
     }
 
-    #message {
-      margin-top: 12px;
+    .btn-capture {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: #fff;
+    }
+
+    .btn-capture:hover {
+      background: #15803d;
+    }
+
+    .preview-area {
+      display: none;
+      margin-top: 8px;
       text-align: center;
-      font-weight: bold;
-      color: #1b5e20;
+    }
+
+    video,
+    #capturedPreview {
+      width: 100%;
+      max-height: 240px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      background: #000;
+    }
+
+    #capturedPreview {
+      display: none;
+    }
+
+    .file-fallback {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .file-fallback input[type="file"] {
+      margin-top: 4px;
+      font-size: 13px;
+    }
+
+    .error-msg {
+      color: #dc2626;
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+      font-weight: 500;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      margin-top: 10px;
+      background: #2b6cb0;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: #22568e;
     }
   </style>
 </head>
-
 <body>
-  <div class="container">
+
+  <div class="form-card">
     <h2>Visitor Entry Form</h2>
 
     <form id="visitorForm">
-      <label for="name">Visitor Name</label>
-      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+      <div class="form-group">
+        <label for="visitorName">Visitor Name</label>
+        <input type="text" id="visitorName" name="visitorName" placeholder="Enter your name" required />
+      </div>
 
-      <label for="mobile">Mobile Number</label>
-      <input type="tel" id="mobile" name="mobile" placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" maxlength="10" required>
+      <div class="form-group">
+        <label for="mobileNumber">Mobile Number</label>
+        <input type="tel" id="mobileNumber" name="mobileNumber" placeholder="Enter mobile number" required />
+      </div>
 
-      <label for="company">Company Name</label>
-      <input type="text" id="company" name="company" placeholder="Enter company name" required>
+      <div class="form-group">
+        <label for="companyName">Company Name</label>
+        <input type="text" id="companyName" name="companyName" placeholder="Enter company name" />
+      </div>
 
-      <label for="person">Person to Meet</label>
-      <input type="text" id="person" name="person" placeholder="Whom do you want to meet?" required>
+      <div class="form-group">
+        <label for="personToMeet">Person to Meet</label>
+        <input type="text" id="personToMeet" name="personToMeet" placeholder="Whom do you want to meet?" required />
+      </div>
 
-      <label for="purpose">Visit Purpose</label>
-      <select id="purpose" name="purpose" required>
-        <option value="">Select purpose</option>
-        <option value="Meeting">Meeting</option>
-        <option value="Official Work">Official Work</option>
-        <option value="Delivery">Delivery</option>
-        <option value="Interview">Interview</option>
-        <option value="Other">Other</option>
-      </select>
+      <div class="form-group">
+        <label for="visitPurpose">Visit Purpose</label>
+        <select id="visitPurpose" name="visitPurpose" required>
+          <option value="" disabled selected>Select purpose</option>
+          <option value="Meeting">Business Meeting</option>
+          <option value="Interview">Interview</option>
+          <option value="Delivery">Delivery / Courier</option>
+          <option value="Maintenance">Maintenance / Support</option>
+          <option value="Personal">Personal Visit</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
 
-      <label for="selfie">Visitor Selfie</label>
-      <input type="file" id="selfie" name="selfie" accept="image/*" capture="user" required>
+      <!-- Visitor Selfie Capture Section -->
+      <div class="form-group">
+        <label>Visitor Selfie</label>
+        <div class="selfie-box">
+          <div class="camera-controls">
+            <button type="button" class="btn-secondary" id="startCameraBtn">Open Camera</button>
+            <button type="button" class="btn-secondary btn-capture" id="captureBtn" style="display:none;">Capture Selfie</button>
+            <button type="button" class="btn-secondary" id="retakeBtn" style="display:none;">Retake</button>
+          </div>
 
-      <label for="details">Additional Details</label>
-      <textarea id="details" name="details" placeholder="Enter details"></textarea>
+          <div class="preview-area" id="previewArea">
+            <video id="cameraStream" autoplay playsinline></video>
+            <img id="capturedPreview" alt="Captured Visitor Selfie" />
+            <canvas id="selfieCanvas" style="display:none;"></canvas>
+          </div>
 
-      <button type="submit">Submit Visitor Details</button>
+          <!-- Hidden field to store Base64 image for form submission -->
+          <input type="hidden" id="selfieData" name="selfieData" />
+
+          <!-- Fallback file upload restricted to JPG and PNG only -->
+          <div class="file-fallback">
+            <span>Or upload / take photo (JPG or PNG only):</span>
+            <input type="file" id="selfieFile" accept=".jpg,.jpeg,.png,image/jpeg,image/png" capture="user" />
+            <div class="error-msg" id="fileError">Invalid file format. Only JPG and PNG images are allowed.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="additionalDetails">Additional Details</label>
+        <textarea id="additionalDetails" name="additionalDetails" placeholder="Enter details"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit Visitor Details</button>
     </form>
-
-    <p id="message"></p>
   </div>
 
   <script>
-    document.getElementById("visitorForm").addEventListener("submit", function(e) {
+    const startCameraBtn = document.getElementById('startCameraBtn');
+    const captureBtn = document.getElementById('captureBtn');
+    const retakeBtn = document.getElementById('retakeBtn');
+    const previewArea = document.getElementById('previewArea');
+    const video = document.getElementById('cameraStream');
+    const canvas = document.getElementById('selfieCanvas');
+    const capturedPreview = document.getElementById('capturedPreview');
+    const selfieDataInput = document.getElementById('selfieData');
+    const selfieFileInput = document.getElementById('selfieFile');
+    const fileError = document.getElementById('fileError');
+
+    let mediaStream = null;
+
+    // Start front-facing camera
+    startCameraBtn.addEventListener('click', async () => {
+      fileError.style.display = 'none';
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user' },
+          audio: false
+        });
+        video.srcObject = mediaStream;
+        previewArea.style.display = 'block';
+        video.style.display = 'block';
+        capturedPreview.style.display = 'none';
+        startCameraBtn.style.display = 'none';
+        captureBtn.style.display = 'inline-block';
+        retakeBtn.style.display = 'none';
+      } catch (err) {
+        alert('Camera access denied or unavailable. Please use the file upload option below.');
+      }
+    });
+
+    // Capture frame from video (saves as PNG)
+    captureBtn.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageDataUrl = canvas.toDataURL('image/png');
+      selfieDataInput.value = imageDataUrl;
+      capturedPreview.src = imageDataUrl;
+      selfieFileInput.value = ''; // Clear file input if camera was used
+
+      stopCamera();
+
+      video.style.display = 'none';
+      capturedPreview.style.display = 'block';
+      captureBtn.style.display = 'none';
+      retakeBtn.style.display = 'inline-block';
+    });
+
+    // Retake selfie
+    retakeBtn.addEventListener('click', () => {
+      selfieDataInput.value = '';
+      startCameraBtn.click();
+    });
+
+    // Validate and preview uploaded file (JPG / PNG only)
+    selfieFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      fileError.style.display = 'none';
+
+      if (!file) return;
+
+      const allowedTypes = ['image/jpeg', 'image/png'];
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      const allowedExtensions = ['jpg', 'jpeg', 'png'];
+
+      // Check both MIME type and file extension
+      if (!allowedTypes.includes(file.type) || !allowedExtensions.includes(fileExtension)) {
+        fileError.style.display = 'block';
+        selfieFileInput.value = ''; // Reject and clear the invalid file
+        selfieDataInput.value = '';
+        capturedPreview.style.display = 'none';
+        previewArea.style.display = 'none';
+        return;
+      }
+
+      stopCamera();
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        selfieDataInput.value = event.target.result;
+        capturedPreview.src = event.target.result;
+        previewArea.style.display = 'block';
+        video.style.display = 'none';
+        capturedPreview.style.display = 'block';
+        startCameraBtn.style.display = 'inline-block';
+        captureBtn.style.display = 'none';
+        retakeBtn.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function stopCamera() {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+        mediaStream = null;
+      }
+    }
+
+    // Form submission validation
+    document.getElementById('visitorForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      document.getElementById("message").textContent =
-        "Form completed! (Note: Connect Google Sheets or a backend to save data permanently.)";
+      if (!selfieDataInput.value) {
+        alert('Please capture or upload a valid JPG/PNG visitor selfie before submitting.');
+        return;
+      }
+      alert('Visitor details and selfie captured successfully!');
     });
   </script>
+
 </body>
 </html>
